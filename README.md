@@ -35,3 +35,19 @@ The first step was setting up the virtual machines. I downloaded virtual box to 
 I created a firewall that only allowed access from my home computer. This allowed me to access both virtual machines through the terminal with ssh. This is also how I installed the necessary software on each of my cloud virtual machines. After all the virtual machines were created and protected, I had to download and configure the software on each machine. The windows machine would have Sysmon and the Wazuh agent installed onto it. One uBuntu machine would have Wazuh dashboard installed while the other uBuntu machine would have theHive installed. I used this repository to configure Sysmon.
 
 https://github.com/olafhartong/sysmon-modular/blob/master/sysmonconfig.xml
+
+## Installed Wazuh, Wazuh Agent, and theHive
+
+![Screenshot 2024-01-31 181739](https://github.com/dagullett/SOC-Automation/assets/75142644/6eb7197b-ca87-4d15-acc7-328392f096be)
+
+![Screenshot 2024-01-31 180559](https://github.com/dagullett/SOC-Automation/assets/75142644/e08ca2c4-f24c-45e1-980c-b9df925706b9)
+
+![Screenshot 2024-01-31 182004](https://github.com/dagullett/SOC-Automation/assets/75142644/47bb9fac-b513-467e-8895-7c28ea470322)
+
+## Infected the Windows Machine with Mimikatz
+
+![Screenshot 2024-01-31 183613](https://github.com/dagullett/SOC-Automation/assets/75142644/08fcc740-9731-4d58-a51c-4e70d5bf4bff)
+
+I downloaded and installed Mimikatz from https://github.com/gentilkiwi/mimikatz/releases/tag/2.2.0-20220919 to simulate a malware infection. Mimikatz is a tool used by security professionals in Ethical Hacking or Red Teaming. Although it is a tool used by security professionals, your web browser and computer will alert you. When I downloaded it, I had to turn off security blockers in the Edge browser. I also had to add the downloads folder as an exception. Windows Defender catches it instantly and blocks you from infecting your system. Once it was downloaded, it was a matter of triggering the malware seen in the screen shot. This allowed logs to be sent to the Wazuh Dashboard.
+
+
