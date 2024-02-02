@@ -32,7 +32,7 @@ The first step was setting up the virtual machines. I downloaded virtual box to 
 
 ![Screenshot 2024-01-31 173356](https://github.com/dagullett/SOC-Automation/assets/75142644/1531bd69-61e9-4694-a9bf-c8bfc3234f99)
 
-I created a firewall that only allowed access from my home computer. This allowed me to access both virtual machines through the terminal with ssh. This is also how I installed the necessary software on each of my cloud virtual machines. After all the virtual machines were created and protected, I had to download and configure the software on each machine. The windows machine would have Sysmon and the Wazuh agent installed onto it. One uBuntu machine would have Wazuh dashboard installed while the other uBuntu machine would have theHive installed. I used this repository to configure Sysmon.
+I created a firewall that only allowed access from my home computer IP address. This allowed me to access both virtual machines through the terminal with ssh. This is also how I installed the necessary software on each of my cloud virtual machines. After all the virtual machines were created and protected, I had to download and configure the software on each machine. The windows machine would have Sysmon and the Wazuh agent installed onto it. One uBuntu machine would have Wazuh dashboard installed while the other uBuntu machine would have theHive installed. I used this repository to configure Sysmon.
 
 https://github.com/olafhartong/sysmon-modular/blob/master/sysmonconfig.xml
 
@@ -48,6 +48,21 @@ https://github.com/olafhartong/sysmon-modular/blob/master/sysmonconfig.xml
 
 ![Screenshot 2024-01-31 183613](https://github.com/dagullett/SOC-Automation/assets/75142644/08fcc740-9731-4d58-a51c-4e70d5bf4bff)
 
-I downloaded and installed Mimikatz from https://github.com/gentilkiwi/mimikatz/releases/tag/2.2.0-20220919 to simulate a malware infection. Mimikatz is a tool used by security professionals in Ethical Hacking or Red Teaming. Although it is a tool used by security professionals, your web browser and computer will alert you. When I downloaded it, I had to turn off security blockers in the Edge browser. I also had to add the downloads folder as an exception. Windows Defender catches it instantly and blocks you from infecting your system. Once it was downloaded, it was a matter of triggering the malware seen in the screen shot. This allowed logs to be sent to the Wazuh Dashboard.
+I downloaded and installed Mimikatz from https://github.com/gentilkiwi/mimikatz/releases/tag/2.2.0-20220919 to simulate a malware infection. Mimikatz is a tool used by security professionals in Ethical Hacking or Red Teaming. Although it is a tool used by security professionals, your web browser and computer will alert you and prevent installation. When I downloaded it, I had to turn off security blockers in the Edge browser. I also had to add the downloads folder as an exception to the Window Firewall. Windows Firewall catches it instantly and blocks you from infecting your system. Once it was downloaded, it was a matter of triggering the malware seen in the screen shot. This allowed logs to be sent to the Wazuh Dashboard.
+
+
+![Screenshot 2024-02-01 092550](https://github.com/dagullett/SOC-Automation/assets/75142644/a3885cc1-29e2-4050-a021-c439d65c65bd)
+
+![Screenshot 2024-02-01 092730](https://github.com/dagullett/SOC-Automation/assets/75142644/8d993566-b75d-477e-8f25-d8c6d3d2e5e3)
+
+When triggering the command in powershell, the alerts sucessfully go to the Wazuh dashboard. The next step, it implementing Shuffle to send alerts to theHive as well as trigger an email.
+
+## Configuring Shuffle with Virus Total, Wazuh, and theHive
+
+The first thing I had to do was add a webhook to the default workflow. This allowed me to get a webhook URI. I needed this to add the ossec tag integration from Shuffle. 
+
+![Screenshot 2024-02-01 190119](https://github.com/dagullett/SOC-Automation/assets/75142644/5bd3af22-a716-4f79-902c-d4330986adf1)
+
+This tag had to be modeified. In the hookrul section, I added my URI. I also changed the level tag to rule_id instead because I wanted it to pull the alert level I created of 100002 instead. My integration tagged look something like this:
 
 
