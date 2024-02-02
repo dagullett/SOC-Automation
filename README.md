@@ -65,4 +65,16 @@ The first thing I had to do was add a webhook to the default workflow. This allo
 
 This tag had to be modeified. In the hookrul section, I added my URI. I also changed the level tag to rule_id instead because I wanted it to pull the alert level I created of 100002 instead. My integration tagged look something like this:
 
+![Screenshot 2024-02-01 193814](https://github.com/dagullett/SOC-Automation/assets/75142644/f23ebe23-d6cd-4299-a373-2cc2172d4672)
 
+
+After adding the integration into Wazuh, I changed the defaul branch to be a SAH256_Regex branch. I had it grab <code>$exec.text.win.eventdata.hashes</code> from the input data. I also grab that hashes from the mimikatz alert. I use these hashes and asked ChatGPT to create a Regex command to look for those hashes. The hashes came out to:
+
+- <code>SHA1=E3B6EA8C46FA831CEC6F235A5CF48B38A4AE8D69</code>
+- <code>MD5=29EFD64DD3C7FE1E2B022B7AD73A1BA5</code>
+- <code>SHA256=61C0810A23580CF492A6BA4F7654566108331E7A4134C968C2D6A05261B2D8A1</code>
+- <code>IMPHASH=55EE500BB4BDFC49F27A98AE456D8EDF</code>
+
+ChatGPT made this easy. When asking it to create a regex to parse the sha256 value hashes. The regex came out to:
+
+- <code>SHA256=([A-Fa-f0-9]{64})</code>
