@@ -59,16 +59,19 @@ When triggering the command in powershell, the alerts sucessfully go to the Wazu
 
 ## Configuring Shuffle with Virus Total, Wazuh, and theHive
 
+![Screenshot 2024-02-01 200735](https://github.com/dagullett/SOC-Automation/assets/75142644/b0a9bfb4-f499-44b4-a178-4f8332f26429)
+
+
 The first thing I had to do was add a webhook to the default workflow. This allowed me to get a webhook URI. I needed this to add the ossec tag integration from Shuffle. 
 
 ![Screenshot 2024-02-01 190119](https://github.com/dagullett/SOC-Automation/assets/75142644/5bd3af22-a716-4f79-902c-d4330986adf1)
 
-This tag had to be modeified. In the hookrul section, I added my URI. I also changed the level tag to rule_id instead because I wanted it to pull the alert level I created of 100002 instead. My integration tagged look something like this:
+This tag had to be modeified. In the hook_urL section, I added my URI. I also changed the level tag to rule_id instead because I wanted it to pull the alert level I created of 100002 instead. My integration tagged look something like this:
 
 ![Screenshot 2024-02-01 193814](https://github.com/dagullett/SOC-Automation/assets/75142644/f23ebe23-d6cd-4299-a373-2cc2172d4672)
 
 
-After adding the integration into Wazuh, I changed the defaul branch to be a SAH256_Regex branch. I had it grab <code>$exec.text.win.eventdata.hashes</code> from the input data. I also grab that hashes from the mimikatz alert. I use these hashes and asked ChatGPT to create a Regex command to look for those hashes. The hashes came out to:
+After adding the integration into Wazuh, I changed the default branch to be a SAH256_Regex branch. I had it grab <code>$exec.text.win.eventdata.hashes</code> from the input data. I also grab the hashes from the mimikatz alert. I used these hashes to ask ChatGPT to create a Regex command to look for those hashes. The hashes were:
 
 - <code>SHA1=E3B6EA8C46FA831CEC6F235A5CF48B38A4AE8D69</code>
 - <code>MD5=29EFD64DD3C7FE1E2B022B7AD73A1BA5</code>
@@ -78,3 +81,14 @@ After adding the integration into Wazuh, I changed the defaul branch to be a SAH
 ChatGPT made this easy. When asking it to create a regex to parse the sha256 value hashes. The regex came out to:
 
 - <code>SHA256=([A-Fa-f0-9]{64})</code>
+
+The next step was to integrate Virus Total into Shuffle. This allows us to enrich the IDCs. Shuffle has a built in app to add the Virus Total branch, but I still needed to create an account with Virus Total and use an get an API key. I used the Virus Total branch to get a hash report using the SHA256 Regex. This allows us to create an alert with theHive as well as allows us to trigger an email with an email app branch. After creating the two branches and configuring them to grab the correct data, I triggered mimikatz once again. This sent an alert to theHive and triggered an email. This is what they looked like:
+
+![Screenshot 2024-02-01 201333](https://github.com/dagullett/SOC-Automation/assets/75142644/f781f51d-01d0-4264-9da9-b0ba0879b58b)
+
+![Screenshot 2024-02-01 201414](https://github.com/dagullett/SOC-Automation/assets/75142644/a453daca-a812-4fda-ace2-0b60e6643381)
+
+## Conclusion
+
+This project shows just how much goes into setting up a Security Operations Center. There is a lot of configuring to get the SIEM to not send false positives. While this was set up for only one user, once all the implementation was completed, it is easily expandable to several hundred users. This project went through many steps from setting up virtual machines, using cloud services, configuring firewalls, and setting up a full SOC automation. 
+
